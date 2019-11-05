@@ -13,6 +13,7 @@
 
   <build_depend>message_generation</build_depend>
 
+  <depend>vrpn_client_ros</depend>
   <depend>std_msgs</depend>
   <depend>message_runtime</depend>
   <depend>rospy</depend>
@@ -20,5 +21,6 @@
   <depend>sensor_msgs</depend>
   <depend>tf</depend>
   <depend>message_filters</depend>
+
 
 </package>

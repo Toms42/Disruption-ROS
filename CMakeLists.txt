@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_filters
   tf
+  vrpn_client_ros
   )
 
 catkin_python_setup()
@@ -35,6 +36,7 @@ catkin_package(CATKIN_DEPENDS
   geometry_msgs
   tf
   message_filters
+  vrpn_client_ros
   )
 
 include_directories(
