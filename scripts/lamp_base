@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+import drivers
+
+if __name__ == "__main__":
+    drivers.lamp_base.main()

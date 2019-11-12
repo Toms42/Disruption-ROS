@@ -1,0 +1,3 @@
+smc_tty: "/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Simple_High-Power_Motor_Controller_18v25_53FF-7006-7277-5049-1848-0567-if00"
+smc_speed_max: 3200
+smc_speed_min: -3200

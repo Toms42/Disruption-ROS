@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+from spotlight import spotlight_aimer
+
+if __name__ == "__main__":
+    spotlight_aimer.main()

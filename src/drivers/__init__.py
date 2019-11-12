@@ -1,0 +1,1 @@
+import lamp_base

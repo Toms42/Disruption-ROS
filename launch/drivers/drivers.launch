@@ -1,0 +1,10 @@
+<launch>
+    <!-- Load the vehicle configuration  -->
+    <rosparam file="$(find rcp_spotlight)/driver_params.yaml" command="load" ns="driver_params"/>
+
+
+    <group ns="drivers">
+        <node pkg="rcp_spotlight" type="lamp_base" name="lamp_base" output="screen"/>
+    </group>
+
+</launch>

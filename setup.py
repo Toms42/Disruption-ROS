@@ -20,10 +20,10 @@ from catkin_pkg.python_setup import generate_distutils_setup
 
 # fetch values from package.xml
 setup_args = generate_distutils_setup(
-    packages=['spotlight_target'],
+    packages=['spotlight', 'drivers'],
     package_dir={'': 'src'},
     requires=['rospy'],
-    scripts=['scripts/spotlight_target']
+    scripts=['scripts/spotlight_target', 'scripts/lamp_base']
 )
 
 setup(**setup_args)
