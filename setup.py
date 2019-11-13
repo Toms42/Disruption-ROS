@@ -23,7 +23,7 @@ setup_args = generate_distutils_setup(
     packages=['spotlight', 'drivers'],
     package_dir={'': 'src'},
     requires=['rospy'],
-    scripts=['scripts/spotlight_target', 'scripts/lamp_base']
+    scripts=['scripts/spotlight_aimer', 'scripts/lamp_base']
 )
 
 setup(**setup_args)

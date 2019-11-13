@@ -1,0 +1,11 @@
+<launch>
+
+
+    <group ns="spotlight">
+        <!-- Load the vehicle configuration  -->
+        <rosparam file="$(find rcp_spotlight)/lamp_params.yaml" command="load"/>
+
+        <node pkg="rcp_spotlight" type="spotlight_aimer" name="spotlight_aimer" output="screen"/>
+    </group>
+
+</launch>

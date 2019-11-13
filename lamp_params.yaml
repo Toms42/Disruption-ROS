@@ -1,3 +1,4 @@
 aim_frame: "lamp_pointed"
-head_frame: "lamp_head"
-stabilized_frame: "lamp_stabilized"
+stab_frame: "lamp_stab"
+world_frame: "world"
+target_topic: "target_frame"
