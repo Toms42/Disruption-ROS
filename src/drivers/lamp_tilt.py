@@ -1,18 +1,17 @@
 from maestro import Maestro
 
-from serial import SerialException
-
 import rospy
 from std_msgs.msg import Float64
+import numpy as np
 
 
 class LampBase:
     def __init__(self):
         print("Starting lamp_base driver!")
 
-        self.sub = rospy.Subscriber(rospy.get_param('/driver_params/effort_topic'), Float64, self.callback)
+        self.sub = rospy.Subscriber(rospy.get_param('/driver_params/altitude_topic'), Float64, self.callback)
 
-        maestro_tty = rospy.get_param('/driver_params/smc_tty')
+        maestro_tty = rospy.get_param('/driver_params/maestro_tty')
         self.minAngle = rospy.get_param('/driver_params/servo_min_deg')
         self.maxAngle = rospy.get_param('/driver_params/servo_max_deg')
         self.minCmd = rospy.get_param('/driver_params/servo_min_us')
@@ -21,7 +20,7 @@ class LampBase:
 
         self.angle = None
 
-        print("Connecting to motor controller at {}".format(maestro_tty))
+        print("Connecting to servo controller at {}".format(maestro_tty))
 
         while True:
             try:
@@ -45,13 +44,19 @@ class LampBase:
 
             cmd = self.minCmd + (self.maxCmd - self.minCmd) * \
                   (self.angle - self.minAngle) / float(self.maxAngle - self.minAngle)
-            self.maestro.setTarget(cmd * 4, self.channel)
+            print(cmd)
+            self.maestro.setTarget(int(cmd * 4), self.channel)
             r.sleep()
 
         # Kill motor if rospy is shutdown:
         self.mc.speed(0)
 
     def callback(self, msg):
+        msg.data = msg.data * 180.0 / np.pi
+        if msg.data < self.minAngle:
+            msg.data = self.minAngle
+        elif msg.data > self.maxAngle:
+            msg.data = self.maxAngle
         self.angle = msg.data
 
 

@@ -4,13 +4,14 @@
 smc_tty: "/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Simple_High-Power_Motor_Controller_18v25_53FF-7006-7277-5049-1848-0567-if00"
 smc_speed_max: 3200
 smc_speed_min: -3200
-effort_topic: "/azimuth_effort"
-smc_invert: false
+effort_topic: "/drivers/azimuth_effort"
+smc_invert: true
 
 # Tilting Lamp Head:
-maestro_tty: ""
+maestro_tty: "/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Mini_Maestro_18-Channel_USB_Servo_Controller_00174926-if00"
+altitude_topic: "/spotlight/altitude_target"
 servo_min_deg: -10
 servo_max_deg: 70
-servo_min_us: 500
-servo_max_us: 1500
+servo_min_us: 1000
+servo_max_us: 2000
 servo_channel: 0
