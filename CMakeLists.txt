@@ -11,14 +11,16 @@ find_package(catkin REQUIRED COMPONENTS
   message_filters
   tf
   vrpn_client_ros
+  message_generation
   )
 
 catkin_python_setup()
 
-## Generate services in the 'srv' folder
-#add_service_files(
-#  FILES
-#)
+
+add_service_files(
+  FILES
+  SetInt32.srv
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
@@ -43,9 +45,6 @@ include_directories(
   src
   ${catkin_INCLUDE_DIRS}
 )
-
-#catkin_install_python(PROGRAMS scripts/thruster_allocator
-#                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch config
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

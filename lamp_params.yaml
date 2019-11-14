@@ -1,4 +1,74 @@
-aim_frame: "lamp_pointed"
-stab_frame: "lamp_stab"
-world_frame: "world"
-target_topic: "target_frame"
+# Frame IDs:
+lamp_frames:
+  aim_frame: "lamp_pointed"
+  stab_frame: "lamp_stab"
+  world_frame: "world"
+
+# Aim control:
+target_topic: "target_frame_id"
+
+# Attitude controller
+alt_topic: "altitude"
+azimuth_target_topic: "azimuth_target"
+alt_target_topic: "altitude_target"
+winds_topic: "winds"
+
+# PID controller params: see http://wiki.ros.org/pid
+azimuth_controller:
+  Kp: 1.0
+  Kd: 0.0
+  kI: 0.0
+  upper_limit: 1.0
+  lower_limit: -1.0
+  windup_limit: 1.0
+  # cutoff_frequency: default
+  topic_from_controller: "/drivers/azimuth_effort"
+  topic_from_plant: "azimuth"
+  setpoint_topic: "azimuth_target"
+  node_name: "azimuth_controller"
+  pid_enable_topic: "azimuth_enable"
+  angle_error: "false"
+  setpoint_timeout: 0.5
+
+# State/Target params:.
+#
+# wrap_probabilities: probabilities of wrapping around to "dewind" the system. Must be sorted ascending by wind_req.
+#
+# wind_req: minimum number of winds required to take effect
+# soft_limit: If the |target - state| is greater than this *in the direction of winds,* then the robot will run in the
+#             dewind direction at probability given by probability
+# probability: probability of dewinding if soft_limit is satisfied
+# hard_limit: after this, robot is guaranteed to dewind
+#
+# Note: angles are given in degrees.
+
+wrap_probabilities:
+  - wind_req: 0
+    soft_limit: 120
+    probability: 40
+    hard_limit: 180
+
+  - wind_req: 1
+    soft_limit: 90
+    probability: 30
+    hard_limit: 140
+
+  - wind_req: 2
+    soft_limit: 90
+    probability: 50
+    hard_limit: 120
+
+  - wind_req: 3
+    soft_limit: 75
+    probability: 50
+    hard_limit: 120
+
+  - wind_req: 4
+    soft_limit: 45
+    probability: 50
+    hard_limit: 90
+
+  - wind_req: 5
+    soft_limit: 0
+    probability: 0
+    hard_limit: 0

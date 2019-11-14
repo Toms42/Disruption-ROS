@@ -6,6 +6,8 @@
         <rosparam file="$(find rcp_spotlight)/lamp_params.yaml" command="load"/>
 
         <node pkg="rcp_spotlight" type="spotlight_aimer" name="spotlight_aimer" output="screen"/>
+        <node pkg="rcp_spotlight" type="spotlight_state" name="spotlight_state" output="screen"/>
+        <node pkg="pid" type="controller" name="azimuth_controller"/>
     </group>
 
 </launch>

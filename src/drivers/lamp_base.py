@@ -10,13 +10,16 @@ class LampBase:
     def __init__(self):
         print("Starting lamp_base driver!")
 
-        self.sub = rospy.Subscriber("base_motor_power", Float64, self.callback)
+        self.sub = rospy.Subscriber(rospy.get_param('/driver_params/effort_topic'), Float64, self.callback)
 
         mc_tty = rospy.get_param('/driver_params/smc_tty')
         self.minspeed = rospy.get_param('/driver_params/smc_speed_min')
         self.maxspeed = rospy.get_param('/driver_params/smc_speed_max')
+        self.invert = rospy.get_param('/driver_params/smc_invert')
 
         self.power = 0
+        self.last_cmd = None
+        self.timeout = 0.2
 
         print("Connecting to motor controller at {}".format(mc_tty))
 
@@ -36,14 +39,26 @@ class LampBase:
     def start(self):
         r = rospy.Rate(50)  # 50 Hz
         while not rospy.is_shutdown():
-            speedcmd = round((self.maxspeed - self.minspeed) / 2 * self.power)
-            #print(self.power)
-            #print(speedcmd)
+
+            if self.last_cmd is None:
+                r.sleep()
+                continue
+            if rospy.Time.now() - self.last_cmd > rospy.Duration(self.timeout):
+                r.sleep()
+                continue
+
+            speedcmd = float(self.maxspeed - self.minspeed) / 2 * self.power
+            if self.invert:
+                speedcmd = -speedcmd
             self.mc.speed(int(speedcmd))
             r.sleep()
 
+        # Kill motor if rospy is shutdown:
+        self.mc.speed(0)
+
     def callback(self, msg):
         self.power = msg.data
+        self.last_cmd = rospy.Time.now()
 
 
 def main():

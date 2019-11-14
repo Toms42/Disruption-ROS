@@ -1,0 +1,3 @@
+<launch>
+    <node name="sim" pkg="rcp_spotlight" type="sim" output="screen"/>
+</launch>

@@ -1,0 +1,15 @@
+robot_frames:
+  - robotA
+  - robotB
+  - robotC
+
+hat_frames:
+  - hatA
+  - hatB
+  - hatC
+
+time_per_robot_min: 4
+time_per_robot_max: 15
+
+lamp_enable_topic: "/spotlight/azimuth_enable"
+lamp_target_frame_topic: "/spotlight/target_frame_id"

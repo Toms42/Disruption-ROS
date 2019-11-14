@@ -1,0 +1,9 @@
+<launch>
+    <group ns="coordinator">
+        <!-- Load the vehicle configuration  -->
+        <rosparam file="$(find rcp_spotlight)/coordinator_params.yaml" command="load"/>
+
+        <node pkg="rcp_spotlight" type="coordinator" name="coordinator" output="screen"/>
+    </group>
+
+</launch>
