@@ -15,3 +15,8 @@ servo_max_deg: 70
 servo_min_us: 1000
 servo_max_us: 2000
 servo_channel: 0
+
+# Relay for bulb:
+relay_tty: "/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0"
+bulb_topic: "/spotlight/bulb_state"
+relay_channel: 1

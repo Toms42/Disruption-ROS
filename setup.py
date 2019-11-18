@@ -26,6 +26,7 @@ setup_args = generate_distutils_setup(
     scripts=['scripts/spotlight_aimer',
              'scripts/spotlight_state',
              'scripts/lamp_tilt',
+             'scripts/lamp_bulb',
              'scripts/coordinator',
              'scripts/sim',
              'scripts/lamp_base']

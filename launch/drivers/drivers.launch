@@ -6,6 +6,7 @@
     <group ns="drivers">
         <node pkg="rcp_spotlight" type="lamp_base" name="lamp_base" output="screen"/>
         <node pkg="rcp_spotlight" type="lamp_tilt" name="lamp_tilt" output="screen"/>
+        <node pkg="rcp_spotlight" type="lamp_bulb" name="lamp_bulb" output="screen"/>
     </group>
 
 </launch>
