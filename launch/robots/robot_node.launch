@@ -1,3 +1,5 @@
 <launch>
-  <node pkg="rcp_spotlight" type="robot_node" name="robot_node" output="screen" ns="robots"/>
+  <node pkg="rcp_spotlight" type="robot_node" name="robot_node" output="screen">
+    <param name="file" value="$(find rcp_spotlight)/src/robots/communicate.dat"/>
+  </node>
 </launch>

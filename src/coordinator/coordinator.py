@@ -3,15 +3,21 @@ import rospy
 import numpy as np
 from std_msgs.msg import Bool, String, Float64
 import random
+import tf
 
 class Coordinator:
     def __init__(self):
+        self.tfl = tf.TransformListener()
+
         self.pub_lamp_enable = rospy.Publisher(rospy.get_param("lamp_enable_topic"), Bool, queue_size=10)
         self.pub_target_frame = rospy.Publisher(rospy.get_param("lamp_target_frame_topic"), String, queue_size=10)
         self.pub_bulb_state = rospy.Publisher(rospy.get_param("lamp_on_topic"), Bool, queue_size=10)
 
         self.min_robot_time = rospy.get_param("time_per_robot_min")
         self.max_robot_time = rospy.get_param("time_per_robot_max")
+
+        self.teleportThreshold = rospy.get_param("teleport_threshold")
+        self.hatAlpha = rospy.get_param("hat_alpha")
 
         self.robots = rospy.get_param("robot_frames")
         self.hats = rospy.get_param("hat_frames")
@@ -25,6 +31,11 @@ class Coordinator:
         self.lamp_on_threshold = rospy.get_param("lamp_on_threshold") * np.pi / 180.0
         self.lamp_state = None
         self.lamp_target = None
+
+        self.hatvelocities = {}
+        self.hatpositions = {}
+
+        self.dt = 1.0/100.0
 
     def update(self, timerEvent):
         #self.pub_lamp_enable.publish(Bool(True))
@@ -44,6 +55,38 @@ class Coordinator:
             self.curr_robot = random.choice([r for r in self.robots if r != self.curr_robot])
             print("\nSwitching to robot {}.  Next switch in {} seconds.".format(self.curr_robot, duration))
 
+        # get hat info:
+        newVelocities = {}
+        newPositions = {}
+        for hat in self.hats:
+            # get tf:
+            try:
+                (pos, rot) = self.tfl.lookupTransform("world", hat, rospy.Time(0))
+                pos = np.array(pos)
+                newPositions[hat] = pos
+                if hat in self.hatpositions:
+                    oldposition = self.hatpositions[hat]
+                else:
+                    oldposition = pos
+
+                self.hatpositions[hat] = pos
+                disp = np.linalg.norm(oldposition - pos)
+                if disp > self.teleportThreshold:
+                    disp = 0
+
+                vel = disp * self.dt
+                if hat in self.hatvelocities:
+                    oldVel = self.hatvelocities[hat]
+                else:
+                    oldVel = 0.0
+
+                self.hatvelocities[hat] = (1-self.hatAlpha)*oldVel + self.hatAlpha*vel
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+                #print("Failed to find transformation between frames: {}".format(e))
+                return
+
+
         self.pub_target_frame.publish(String(self.curr_robot))
 
     def lamp_state_callback(self, msg):
@@ -53,7 +96,7 @@ class Coordinator:
         self.lamp_target = msg.data
 
     def start(self):
-        rospy.Timer(rospy.Duration(1.0 / 100), self.update)
+        rospy.Timer(rospy.Duration(self.dt), self.update)
         rospy.spin()
 
 def main():

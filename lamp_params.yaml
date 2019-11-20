@@ -5,7 +5,11 @@ lamp_frames:
   world_frame: "world"
 
 # Aim control:
-target_topic: "target_frame_id"
+target_topic: "/spotlight/target_frame_id"
+enable_topic: "/enable_hardware"
+
+hat_alpha: 0.1
+teleport_threshold: 0.5
 
 # Attitude controller
 alt_topic: "altitude"
@@ -26,7 +30,7 @@ azimuth_controller:
   topic_from_plant: "azimuth"
   setpoint_topic: "azimuth_target"
   node_name: "azimuth_controller"
-  pid_enable_topic: "azimuth_enable"
+  pid_enable_topic: "/enable_hardware"
   angle_error: "false"
   setpoint_timeout: 0.5
 
