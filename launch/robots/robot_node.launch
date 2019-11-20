@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="rcp_spotlight" type="robot_node" name="robot_node" output="screen" ns="robots"/>
+</launch>

@@ -3,6 +3,7 @@ import json
 
 import time
 import random
+import math
 
 class Robot:
 
@@ -18,10 +19,22 @@ class Robot:
     def __init__(self, name,motor_index):
         self.motor_index = motor_index
         self.load_from_Json(name)
+        self.excitement = 0
 
-    def update(self,light_state,enable):
-        if not enable: #stop motor
-            return
+
+    def light_on(self,light_on = False):
+        if light_on:
+            self.excitement += .5
+        else:
+            self.excitement -= .1
+
+    def get_time_to_sleep(self,time):
+        excitement =  (math.atan(self.excitement) + math.pi/2) 
+        return max(min(float(time)/excitement,10),.5)
+
+    def get_desire(self):
+        return -self.excitement
+
 
     def get_next_pose(self):
         #randomly select pose from the current primitive

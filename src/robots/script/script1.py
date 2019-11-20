@@ -20,6 +20,8 @@ import time, queue
 import numpy
 import rcp.script
 import Robot_Motions_Reader
+import os.path
+
 
 ################################################################
 class Script(rcp.script.Script):
@@ -82,9 +84,6 @@ class Script(rcp.script.Script):
         return
 
 
-    def Tom_update(self):
-        return False,False
-
     def sequence(self):
         """Demonstration sequence.  This could be decomposed further into subroutines."""
         snake = Robot_Motions_Reader.Robot("snake_config.json", 1)
@@ -96,21 +95,34 @@ class Script(rcp.script.Script):
         self.send_cue('gains', 0.5, 1.0)
         for index in range(3):
             self.output.put(('raw',index, [0,0,0,0])) #Get these robots hard
-        sleep_dict = {"Snake" : 100000,"Frog" : 100000, "Bird": 0}
+        sleep_dict = {"Snake" : 0,"Frog" : 0, "Bird": 0}
         robo_dict = {"Snake":snake,"Frog":frog, "Bird":bird}
-        actually_start = False;
+        actually_start = False
 
         while True:
-            actually_start,light_on = self.Tom_update()
-            if light_on:
-                pass
-           # self.sleep(time)
-         #   self.send_cue('gains', gain, damping)
-           # self.output.put(('raw', 0, pos))
+            if os.path.isfile('communicate.dat'):
+                with open('communicate.dat', 'r') as f:
+                    lines = f.readlines()
+                    if len(lines) == 0:
+                        break;
+                    words = lines[-1].split(':')
+                    #print(words)
+                    robot_name = words[0] #TODO USE THIS VAR
+                    actually_start = words[1] == "True"
+                    print("we have read " + robot_name + " " + str(actually_start))
+                    if actually_start:
+                        with open('desires.dat', 'w+') as f:
+                            for key in robo_dict.keys():
+                                f.write(key + ":" + str(robo_dict[key].get_desire()) + ":\n")
+                                #print(key + ":" + str(robo_dict[key].get_desire()))
+                                if(robot_name == key):
+                                    robo_dict[key].light_on(True)
+                                else:
+                                    robo_dict[key].light_on(False)
+
+
             if actually_start:
                 min_sleep = min(sleep_dict.values()) 
-                #res = [key for key in sleep_dict if sleep_dict[key] == temp] 
-                print(min_sleep)
                 self.sleep(min_sleep)
                 for key in sleep_dict:
                     value = sleep_dict[key]
@@ -121,10 +133,12 @@ class Script(rcp.script.Script):
                         rand_damp = min(1, max(.1, numpy.random.normal(damping, .2, None)))
                         self.send_cue('gains', gain, rand_damp)
                         self.output.put(('raw', robot.motor_index, pos))
-                        sleep_dict[key] = time
+                        sleep_dict[key] = robot.get_time_to_sleep(time)
 
                     else:
                         sleep_dict[key] = value-min_sleep
+            print('------------------------------------------------------------------')
+            print('------------------------------------------------------------------')
 
             #print(pos)
             
