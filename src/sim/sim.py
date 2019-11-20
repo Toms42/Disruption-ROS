@@ -12,9 +12,9 @@ class Sim:
 
         self.sub_effort = rospy.Subscriber("/drivers/azimuth_effort", Float64, self.callback)
         self.frame = "lamp_stab"
-        self.omega_max = 2 * 2 * np.pi  # 2 rotations per second
+        self.omega_max = 1.8 * 2 * np.pi  # 2 rotations per second
         self.azimuth = 0
-        self.position = [0, 0, 0]
+        self.position = [0, 0, 0.5]
         self.effort = 0
         self.dt = 0.01
 

@@ -10,10 +10,10 @@ smc_invert: true
 # Tilting Lamp Head:
 maestro_tty: "/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Mini_Maestro_18-Channel_USB_Servo_Controller_00174926-if00"
 altitude_topic: "/spotlight/altitude_target"
-servo_min_deg: -10
-servo_max_deg: 70
-servo_min_us: 1000
-servo_max_us: 2000
+servo_min_deg: -66
+servo_max_deg: 32
+servo_min_us: 2000
+servo_max_us: 1050
 servo_channel: 0
 
 # Relay for bulb:

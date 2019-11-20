@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find rcp_spotlight)/launch/spotlight/spotlight.launch"/>
+    <include file="$(find rcp_spotlight)/launch/coordinator/coordinator.launch"/>
+    <include file="$(find rcp_spotlight)/launch/drivers/drivers.launch"/>
+    <include file="$(find rcp_spotlight)/launch/sim/sim.launch"/>
+</launch>

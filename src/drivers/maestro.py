@@ -31,9 +31,12 @@ class Maestro:
     # ports, or you are using a Windows OS, you can provide the tty port.  For
     # example, '/dev/ttyACM2' or for Windows, something like 'COM3'.
     def __init__(self,
-                 ttyStr='/dev/serial/by-id/usb-Pololu_Corporation_Pololu_Micro_Maestro_6-Servo_Controller_00251776-if00',
+                 ttyStr='',
                  device=0x0c):
         # Open the command port
+        self.ttyStr = ttyStr
+        self.device = device
+
         try:
             self.usb = serial.Serial(ttyStr)
         except:
@@ -62,10 +65,16 @@ class Maestro:
         if not self.init:
             return False
 
-        if PY2:
-            self.usb.write(cmdStr)
-        else:
-            self.usb.write(bytes(cmdStr, 'latin-1'))
+        try:
+            if PY2:
+                self.usb.write(cmdStr)
+            else:
+                self.usb.write(bytes(cmdStr, 'latin-1'))
+        except serial.SerialException:
+            try:
+                self.__init__(self.ttyStr, self.device)
+            except serial.SerialException:
+                pass
 
     # Set channels min and max value range.  Use this as a safety to protect
     # from accidentally moving outside known safe parameters. A setting of 0

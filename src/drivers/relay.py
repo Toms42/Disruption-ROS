@@ -26,4 +26,11 @@ class Relay:
         cmd = bytearray([hdr, ch, value, chk])
         cmd
 
-        self.usb.write(cmd)
+        try:
+            self.usb.write(cmd)
+        except SerialException:
+            try:
+                self.usb = serial.Serial(ttyStr)
+                self.usb.baudrate = 9600
+            except SerialException as se:
+                raise SerialException("Failed to setup relay: {}".format(se.message))

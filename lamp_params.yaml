@@ -15,7 +15,7 @@ winds_topic: "winds"
 
 # PID controller params: see http://wiki.ros.org/pid
 azimuth_controller:
-  Kp: 1.5
+  Kp: 0.5
   Kd: 0.0
   kI: 0.0
   upper_limit: 1.0

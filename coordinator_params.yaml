@@ -1,7 +1,7 @@
 robot_frames:
-  - robotA
-  - robotB
-  - robotC
+  - botA
+  - botB
+  - botC
 
 hat_frames:
   - hatA
@@ -10,6 +10,12 @@ hat_frames:
 
 time_per_robot_min: 4
 time_per_robot_max: 15
+
+# error threshold in degrees for the lamp to be on:
+lamp_on_threshold: 5
+lamp_state_topic: "/spotlight/azimuth"
+lamp_target_topic: "/spotlight/azimuth_target"
+lamp_on_topic: "/spotlight/bulb_state"
 
 lamp_enable_topic: "/spotlight/azimuth_enable"
 lamp_target_frame_topic: "/spotlight/target_frame_id"
