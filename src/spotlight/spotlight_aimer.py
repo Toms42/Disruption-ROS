@@ -63,7 +63,7 @@ class SpotlightAimer:
         try:
             (target_pos, rot) = self.tfl.lookupTransform(self.world_frame, self.target_frame, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            #print("Failed to find transformation between frames: {}".format(e))
+            # print("Failed to find transformation between frames: {}".format(e))
             return
 
         self.tfb.sendTransform(target_pos, (0, 0, 0, 1.0), rospy.Time.now(), "lamp_target", self.world_frame)
@@ -76,13 +76,13 @@ class SpotlightAimer:
         try:
             (lamp_pos, rot) = self.tfl.lookupTransform(self.world_frame, self.lamp_frame, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            #print("Failed to find transformation between frames: {}".format(e))
+            # print("Failed to find transformation between frames: {}".format(e))
             return
 
         try:
             (target_pos, rot) = self.tfl.lookupTransform(self.world_frame, self.target_frame, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            #print("Failed to find transformation between frames: {}".format(e))
+            # print("Failed to find transformation between frames: {}".format(e))
             return
 
         vector = np.array(target_pos) - np.array(lamp_pos)
@@ -136,6 +136,8 @@ class SpotlightAimer:
     # Turn a local target into a global target based on current lamp winds and azimuth.
     # Should be called once per new target.
     def dewind_azimuth_target(self, target_local):
+        print("\nDewind target for frame: {}".format(self.target_frame))
+        print("Current lamp: {}".format(self.lamp_azimuth_total))
         # first find the travel distance (state to target) in [-pi, pi]
         print("target local: {}, lamp local: {}, diff: {}".format(target_local, self.lamp_azimuth_local,
                                                                   target_local - self.lamp_azimuth_local))
@@ -154,7 +156,7 @@ class SpotlightAimer:
         print("target input: {}, travel: {}".format(target_abs, travel))
 
         # determine if travel will already unwind us:
-        if travel * self.lamp_winds < 0:
+        if travel * self.lamp_azimuth_total < 0:
             print("result: unwind unnecessary")
             return target_abs
 
@@ -165,10 +167,12 @@ class SpotlightAimer:
                 windup_params = self.windup_params[i]
                 break
         print("Windup params chosen: {}".format(windup_params["wind_req"]))
+        print("soft limit: {}, hard limit: {}, travel: {}".format(windup_params["soft_limit"],
+                                                                  windup_params["hard_limit"], travel * 180.0/np.pi))
 
         # check if we are in an unwind scenario:
-        if abs(travel) > windup_params["hard_limit"] * 180.0 / np.pi \
-                or (abs(travel) > windup_params["soft_limit"] * 180.0 / np.pi
+        if abs(travel * 180.0 / np.pi) >= windup_params["hard_limit"] \
+                or (abs(travel * 180.0 / np.pi) > windup_params["soft_limit"]
                     and random.uniform(0, 100) <= windup_params["probability"]):
             if self.lamp_winds > 0:
                 print("result: unwind right (subtract 2pi)")

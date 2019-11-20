@@ -7,7 +7,7 @@ import numpy as np
 
 class LampBase:
     def __init__(self):
-        print("Starting lamp_base driver!")
+        print("Starting lamp_tilt driver!")
 
         self.sub = rospy.Subscriber(rospy.get_param('/driver_params/altitude_topic'), Float64, self.callback)
 
@@ -26,7 +26,7 @@ class LampBase:
             try:
                 self.maestro = Maestro(ttyStr=maestro_tty)
             except ValueError as se:
-                print("Could not configure motor controller! Trying again in 3 seconds.")
+                print("Could not configure servo controller! Trying again in 3 seconds.")
                 print(se.message)
                 rospy.sleep(3)
                 continue
@@ -44,7 +44,6 @@ class LampBase:
 
             cmd = self.minCmd + (self.maxCmd - self.minCmd) * \
                   (self.angle - self.minAngle) / float(self.maxAngle - self.minAngle)
-            print(cmd)
             self.maestro.setTarget(int(cmd * 4), self.channel)
             r.sleep()
 
@@ -61,7 +60,6 @@ class LampBase:
 
 
 def main():
-    print("here!")
     rospy.init_node('lamp_base')
     lb = LampBase()
     lb.start()

@@ -1,3 +1,9 @@
 <launch>
     <node name="sim" pkg="rcp_spotlight" type="sim" output="screen"/>
+    <node pkg="tf" type="static_transform_publisher" name="hatBroadcasterA" args="2 2 1 0 0 1 world hatA 100" />
+    <node pkg="tf" type="static_transform_publisher" name="hatBroadcasterB" args="-2 -2 0.5 0 0 1 world hatB 100" />
+    <node pkg="tf" type="static_transform_publisher" name="hatBroadcasterC" args="-3 2 -0.5 0 0 1 world hatC 100" />
+    <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterA" args="4 2 -0.5 0 0 1 world botA 100" />
+    <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterB" args="-3 -2 2 0 0 1 world botB 100" />
+    <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterC" args="-1 -3 -1 0 0 1 world botC 100" />
 </launch>
