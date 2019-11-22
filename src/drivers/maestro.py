@@ -40,7 +40,7 @@ class Maestro:
         try:
             self.usb = serial.Serial(ttyStr)
         except:
-            raise ValueError("Could not find Maestro servo controller! Is it connected and configured as dual port?")
+            raise serial.SerialException("Could not find Maestro servo controller! Is it connected and configured as dual port?")
         # Command lead-in and device number are sent for each Pololu serial command.
         self.PololuCmd = chr(0xaa) + chr(device)
         # Track target position for each servo. The function isMoving() will

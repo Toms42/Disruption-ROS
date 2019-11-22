@@ -18,10 +18,13 @@ class RobotNode:
 		else:
 			enable = "False"
 
+		enable = "True"
+
 		with open(self.file, 'w+') as f:
 			f.write("{}:{}:\n".format(self.target, enable))
+			#time.sleep(10000)
 
-		print("{}:{}:\n".format(self.target, enable))
+		#print("{}:{}:\n".format(self.target, enable))
 
 	def update_target(self, msg):
 		self.target = msg.data

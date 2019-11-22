@@ -3,6 +3,7 @@ from maestro import Maestro
 import rospy
 from std_msgs.msg import Float64
 import numpy as np
+import serial
 
 
 class LampBase:
@@ -25,7 +26,7 @@ class LampBase:
         while True:
             try:
                 self.maestro = Maestro(ttyStr=maestro_tty)
-            except ValueError as se:
+            except serial.SerialException as se:
                 print("Could not configure servo controller! Trying again in 3 seconds.")
                 print(se.message)
                 rospy.sleep(3)

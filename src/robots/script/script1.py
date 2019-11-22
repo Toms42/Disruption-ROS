@@ -86,10 +86,10 @@ class Script(rcp.script.Script):
 
     def sequence(self):
         """Demonstration sequence.  This could be decomposed further into subroutines."""
-        snake = Robot_Motions_Reader.Robot("snake_config.json", 1)
+        snake = Robot_Motions_Reader.Robot("snake_config.json", 2)
         frog = Robot_Motions_Reader.Robot("frog_config.json",0)
 
-        bird = Robot_Motions_Reader.Robot("bird_config.json",2)
+        bird = Robot_Motions_Reader.Robot("bird_config.json",1)
 
         self.write("Script starting.")
         self.send_cue('gains', 0.5, 1.0)
@@ -104,7 +104,9 @@ class Script(rcp.script.Script):
                 with open('communicate.dat', 'r') as f:
                     lines = f.readlines()
                     if len(lines) == 0:
-                        break;
+                        print("race detected sleeping for .2 seconds")
+                        self.sleep(.2)
+                        continue
                     words = lines[-1].split(':')
                     #print(words)
                     robot_name = words[0] #TODO USE THIS VAR
@@ -116,13 +118,19 @@ class Script(rcp.script.Script):
                                 f.write(key + ":" + str(robo_dict[key].get_desire()) + ":\n")
                                 #print(key + ":" + str(robo_dict[key].get_desire()))
                                 if(robot_name == key):
-                                    robo_dict[key].light_on(True)
-                                else:
-                                    robo_dict[key].light_on(False)
+                                    robot = robo_dict[key]
+                                    (pos,time,gain,damping) = robot.get_next_pose()
+
+                                    rand_damp = min(1, max(.1, numpy.random.normal(damping, .2, None)))
+                                    self.send_cue('gains', gain, rand_damp)
+                                    self.output.put(('raw', robot.motor_index, pos))
+                                #else:
+                                 #   robo_dict[key].light_on(False)
 
 
-            if actually_start:
-                min_sleep = min(sleep_dict.values()) 
+            '''if actually_start:
+                min_sleep = min(sleep_dict.values())
+                print("we are sleeping for" + str(min_sleep))
                 self.sleep(min_sleep)
                 for key in sleep_dict:
                     value = sleep_dict[key]
@@ -138,10 +146,11 @@ class Script(rcp.script.Script):
                     else:
                         sleep_dict[key] = value-min_sleep
             print('------------------------------------------------------------------')
-            print('------------------------------------------------------------------')
+            print('------------------------------------------------------------------')'''
+            self.sleep(1)
 
             #print(pos)
-            
+
             #self.send_pose('reset')
             #self.sleep(1.0)
 

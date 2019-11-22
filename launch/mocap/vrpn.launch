@@ -1,5 +1,8 @@
 <launch>
-  <arg name="server" default="128.237.113.218"/>
+  <arg name="server" default="128.237.215.82"/>
+  <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterSnake" args="0.85 -2.45 1.1 0 0 1 world Snake 100" />
+  <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterFrog" args="1.22 1.24 1.1 0 0 1 world Frog 100" />
+  <node pkg="tf" type="static_transform_publisher" name="BotBroadcasterBird" args="-2.35 -0.45 1.1 0 0 1 world Bird 100" />
   <node pkg="vrpn_client_ros" type="vrpn_client_node" name="vrpn_client_node" output="screen">
     <rosparam subst_value="true">
       server: $(arg server)

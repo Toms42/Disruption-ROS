@@ -8,9 +8,6 @@ lamp_frames:
 target_topic: "/spotlight/target_frame_id"
 enable_topic: "/enable_hardware"
 
-hat_alpha: 0.1
-teleport_threshold: 0.5
-
 # Attitude controller
 alt_topic: "altitude"
 azimuth_target_topic: "azimuth_target"
@@ -21,11 +18,11 @@ winds_topic: "winds"
 azimuth_controller:
   Kp: 0.5
   Kd: 0.0
-  kI: 0.0
+  kI: 0.05
   upper_limit: 1.0
   lower_limit: -1.0
-  windup_limit: 1.0
-  # cutoff_frequency: default
+  windup_limit: 0.1
+  cutoff_frequency: 5
   topic_from_controller: "/drivers/azimuth_effort"
   topic_from_plant: "azimuth"
   setpoint_topic: "azimuth_target"
@@ -54,25 +51,22 @@ wrap_probabilities:
 
   - wind_req: 1
     soft_limit: 90
-    probability: 30
-    hard_limit: 140
+    probability: 40
+    hard_limit: 120
 
   - wind_req: 2
-    soft_limit: 90
-    probability: 50
-    hard_limit: 120
-
-  - wind_req: 3
-    soft_limit: 75
-    probability: 50
-    hard_limit: 120
-
-  - wind_req: 4
-    soft_limit: 45
+    soft_limit: 70
     probability: 50
     hard_limit: 90
 
-  - wind_req: 5
-    soft_limit: 0
-    probability: 0
+  - wind_req: 3
+    soft_limit: 20
+    probability: 50
+    hard_limit: 45
+
+  - wind_req: 4
+    soft_limit: 30
+    probability: 60
     hard_limit: 0
+
+absolute_max_winds: 4

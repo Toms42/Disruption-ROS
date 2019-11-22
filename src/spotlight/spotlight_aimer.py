@@ -129,6 +129,9 @@ class SpotlightAimer:
             # print(self.target_azimuth_local)
             self.target_azimuth_total = self.target_azimuth_local + self.target_winds * 2 * np.pi
 
+            if abs(self.target_azimuth_total) > 2*np.pi*rospy.get_param("absolute_max_winds"):
+                self.target_azimuth_total -= 2*np.pi * abs(self.target_azimuth_total)/self.target_azimuth_total
+
         # Publish the alt-azimuth info of the target:
         self.pub_azimuth.publish(Float64(self.target_azimuth_total))
         self.pub_alt.publish(Float64(-pitch))

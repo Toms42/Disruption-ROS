@@ -20,6 +20,7 @@ class LampBase:
         self.power = 0
         self.last_cmd = None
         self.timeout = 0.2
+        self.mc = None
 
         print("Connecting to motor controller at {}".format(self.mc_tty))
 
@@ -36,39 +37,34 @@ class LampBase:
 
         print("Successfully initialized lamp base motor driver!")
 
-    def start(self):
-        r = rospy.Rate(50)  # 50 Hz
-        while not rospy.is_shutdown():
+    def timerUpdate(self, timerEvent):
+        if self.last_cmd is None:
+            return
+        if rospy.Time.now() - self.last_cmd > rospy.Duration(self.timeout):
+            return
 
-            if self.last_cmd is None:
-                r.sleep()
-                continue
-            if rospy.Time.now() - self.last_cmd > rospy.Duration(self.timeout):
-                r.sleep()
-                continue
+        speedcmd = float(self.maxspeed - self.minspeed) / 2 * self.power
+        if self.invert:
+            speedcmd = -speedcmd
 
-            speedcmd = float(self.maxspeed - self.minspeed) / 2 * self.power
-            if self.invert:
-                speedcmd = -speedcmd
+        try:
+            self.mc.speed(int(speedcmd))
+        except SerialException:
             try:
-                self.mc.speed(int(speedcmd))
-            except SerialException:
-                try:
-                    self.mc = SMC(self.mc_tty, 115200)
-                    self.mc.init()
-                except SerialException as se:
-                    print("Could not configure motor controller after loss!")
-                    print(se.message)
-            r.sleep()
-
-        # Kill motor if rospy is shutdown:
-        self.mc.speed(0)
+                self.mc = SMC(self.mc_tty, 115200)
+                self.mc.init()
+            except SerialException as se:
+                print("Could not configure motor controller after connection  loss!.")
+                print(se.message)
 
     def callback(self, msg):
         self.power = msg.data
         self.last_cmd = rospy.Time.now()
 
-
+    def start(self):
+        rospy.Timer(rospy.Duration(1.0/50), self.timerUpdate)
+        rospy.spin()
+        self.mc.speed(0)
 
 def main():
     rospy.init_node('lamp_base')

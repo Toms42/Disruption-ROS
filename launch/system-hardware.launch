@@ -3,4 +3,5 @@
     <include file="$(find rcp_spotlight)/launch/coordinator/coordinator.launch"/>
     <include file="$(find rcp_spotlight)/launch/drivers/drivers.launch"/>
     <include file="$(find rcp_spotlight)/launch/mocap/vrpn.launch"/>
+    <include file="$(find rcp_spotlight)/launch/robots/robot_node.launch" />
 </launch>

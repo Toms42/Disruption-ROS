@@ -24,9 +24,10 @@ class Robot:
 
     def light_on(self,light_on = False):
         if light_on:
-            self.excitement += .5
+            self.excitement += 10
         else:
-            self.excitement -= .1
+            self.excitement -= .5
+        self.excitement = max(-10,min(10,self.excitement))
 
     def get_time_to_sleep(self,time):
         excitement =  (math.atan(self.excitement) + math.pi/2) 

@@ -8,6 +8,7 @@ PY2 = version_info[0] == 2  # Running Python 2.x?
 class Relay:
     def __init__(self, ttyStr):
         try:
+            self.ttyStr = ttyStr
             self.usb = serial.Serial(ttyStr)
             self.usb.baudrate = 9600
         except SerialException as se:
@@ -24,13 +25,12 @@ class Relay:
         chk = hdr + ch + value
 
         cmd = bytearray([hdr, ch, value, chk])
-        cmd
 
         try:
             self.usb.write(cmd)
         except SerialException:
             try:
-                self.usb = serial.Serial(ttyStr)
+                self.usb = serial.Serial(self.ttyStr)
                 self.usb.baudrate = 9600
             except SerialException as se:
                 raise SerialException("Failed to setup relay: {}".format(se.message))
