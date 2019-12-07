@@ -28,6 +28,10 @@ http://wiki.ros.org/melodic/Installation/Ubuntu
     sudo apt-get update
     rosdep install --from-paths rcp_spotlight --ignore-src -r -y
 
+There's a few dependencies I never got around to setting up rosdep stuff for, so install those manually:
+
+    sudo -H pip install smc scipy
+
 To update dependencies (eg, after pulling in a large change) run this command again:
 
     rosdep update
