@@ -57,6 +57,7 @@ class LampState:
         self.pub_winds.publish(Int32(self.winds))
 
     def set_winds_callback(self, srv):
+        # Allows manual override of the winds counter for testing purposes
         self.winds = srv.data
         res = SetInt32Response()
         res.success = True
