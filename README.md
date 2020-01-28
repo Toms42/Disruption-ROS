@@ -2,7 +2,11 @@
 
 # RCP-Spotlight
 
-This is the repo for the Spotlight project for Robotics for Creative Practice (16-375) at CMU.
+This is the repo for the Spotlight project for Robotics for Creative Practice (16-375) at CMU. Most of this code was written in the span of about a week, so some parts are a little hacky in order to get the performance to work on time.
+
+This project coordinates an "intelligent" lamp that can rotate continuously, tilt, turn on/off, and control a set of three background robot automata. The robot senses through a motion capture system setup in the performance gallery. The robot's control loop is closed through the motion capture system, so it is required for operation. A simple simulator is provided to test the system without a motion capture system, including testing the robot hardware "simulator-in-the-loop" with a simulated mocap system and robot.
+
+Check out a video here: https://www.youtube.com/watch?v=D0R_D-RSr8Q
 
 ## Setup and File Hierarchy
 ### This stuff all relies on ROS, so install from here:
